@@ -9,8 +9,8 @@
 /_______  /\___|_  /|___|  \___/\____|__  / 
         \/       \/                     \/  
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/gjKsAeBuUF                   
+https://discord.gg/gjKsAeBuUF : https://discord.gg/gjKsAeBuUF                         
 
 Command Verified : ✓  
 Website        : ssrr.tech  
@@ -27,7 +27,7 @@ const { serverConfigCollection } = require('../../mongodb');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setnotifications')
-        .setDescription('Manage notifications for YouTube, Twitch, Facebook, and Instagram.')
+        .setDescription('Manage notifications for https://discord.gg/gjKsAeBuUF, Twitch, Facebook, and Instagram.')
         .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
         .addSubcommand(subcommand =>
             subcommand
@@ -38,14 +38,14 @@ module.exports = {
                         .setDescription('The platform to set up notifications for.')
                         .setRequired(true)
                         .addChoices(
-                            { name: 'YouTube', value: 'youtube' },
+                            { name: 'https://discord.gg/gjKsAeBuUF', value: 'https://discord.gg/gjKsAeBuUF' },
                             { name: 'Twitch', value: 'twitch' },
                             { name: 'Facebook', value: 'facebook' },
                             { name: 'Instagram', value: 'instagram' },
                         ))
                 .addStringOption(option =>
                     option.setName('platform_id')
-                        .setDescription('YouTube Channel ID, Twitch Channel ID, Facebook Channel ID, or Instagram Account ID.')
+                        .setDescription('https://discord.gg/gjKsAeBuUF Channel ID, Twitch Channel ID, Facebook Channel ID, or Instagram Account ID.')
                         .setRequired(true))
                 .addChannelOption(option =>
                     option.setName('discord_channel')
@@ -68,7 +68,7 @@ module.exports = {
                         .setDescription('The platform to view notifications for.')
                         .setRequired(true)
                         .addChoices(
-                            { name: 'YouTube', value: 'youtube' },
+                            { name: 'https://discord.gg/gjKsAeBuUF', value: 'https://discord.gg/gjKsAeBuUF' },
                             { name: 'Twitch', value: 'twitch' },
                             { name: 'Facebook', value: 'facebook' },
                             { name: 'Instagram', value: 'instagram' },
@@ -186,7 +186,7 @@ module.exports = {
             .setAuthor({ 
                 name: "Alert!", 
                 iconURL: cmdIcons.dotIcon ,
-                url: "https://discord.gg/xQF9f9yUEM"
+                url: "https://discord.gg/gjKsAeBuUF"
             })
             .setDescription('- This command can only be used through slash command!\n- Please use `/setnotifications`')
             .setTimestamp();
@@ -209,8 +209,8 @@ module.exports = {
 /_______  /\___|_  /|___|  \___/\____|__  / 
         \/       \/                     \/  
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/gjKsAeBuUF                   
+https://discord.gg/gjKsAeBuUF : https://discord.gg/gjKsAeBuUF                         
 
 Command Verified : ✓  
 Website        : ssrr.tech  

@@ -67,7 +67,7 @@ async function executePlay(interaction, input) {
 
 function isPlaylist(input) {
     const playlistPatterns = [
-        /playlist\?list=/i, // YouTube playlist pattern
+        /playlist\?list=/i, // https://discord.gg/gjKsAeBuUF playlist pattern
         /open\.spotify\.com\/playlist\//i, // Spotify playlist pattern
         /spotify:playlist:/i // Spotify playlist URI pattern
     ];

@@ -83,7 +83,7 @@ async function monitorConfigChanges(client) {
                             .setAuthor({
                                 name: "Welcome to Ticket Support",
                                 iconURL: ticketIcons.mainIcon,
-                                url: "https://discord.gg/xQF9f9yUEM"
+                                url: "https://discord.gg/gjKsAeBuUF"
                             })
                             .setDescription(
                                 '- Please click below menu to create a new ticket.\n\n' +
@@ -201,7 +201,7 @@ async function handleSelectMenu(interaction, client) {
         .setAuthor({
             name: "Support Ticket",
             iconURL: ticketIcons.modIcon,
-            url: "https://discord.gg/xQF9f9yUEM"
+            url: "https://discord.gg/gjKsAeBuUF"
         })
         .setDescription(
             `Hello ${user}, welcome to our support!\n- Please provide a detailed description of your issue\n- Our support team will assist you as soon as possible.\n- Feel free to open another ticket if this one is closed.`
@@ -232,7 +232,7 @@ async function handleSelectMenu(interaction, client) {
         .setAuthor({
             name: "Ticket Created!",
             iconURL: ticketIcons.correctIcon,
-            url: "https://discord.gg/xQF9f9yUEM"
+            url: "https://discord.gg/gjKsAeBuUF"
         })
         .setDescription(`- Your ${ticketType} ticket has been created.`)
         .addFields(
@@ -314,7 +314,7 @@ async function handleCloseButton(interaction, client) {
             .setAuthor({
                 name: "Ticket closed!",
                 iconURL: ticketIcons.correctrIcon,
-                url: "https://discord.gg/xQF9f9yUEM"
+                url: "https://discord.gg/gjKsAeBuUF"
             })
             .setDescription(`- Your ticket has been closed.`)
             .setTimestamp()

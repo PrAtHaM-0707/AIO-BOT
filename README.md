@@ -17,12 +17,12 @@
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/channel/@GlaceYT">
-    <img src="https://img.shields.io/badge/YouTube-Subscribe-red?style=flat-square&logo=youtube"
-      alt="YouTube" />
+  <a href="https://www.https://discord.gg/gjKsAeBuUF.com/channel/@GlaceYT">
+    <img src="https://img.shields.io/badge/https://discord.gg/gjKsAeBuUF-Subscribe-red?style=flat-square&logo=https://discord.gg/gjKsAeBuUF"
+      alt="https://discord.gg/gjKsAeBuUF" />
   </a>
 
-  <a href="https://discord.gg/xQF9f9yUEM">
+  <a href="https://discord.gg/gjKsAeBuUF">
     <img src="https://img.shields.io/badge/Discord-Join-blue?style=flat-square&logo=discord"
       alt="Join Discord" />
   </a>
@@ -78,7 +78,7 @@ Test your bot by sending commands to ensure it is operational.
 🎉 Congratulations! Your bot is now up and running. 🥳
 
 ### Additional Resources
-Video Tutorial: If you prefer a video guide, watch this YouTube tutorial [ Soon ].
+Video Tutorial: If you prefer a video guide, watch this https://discord.gg/gjKsAeBuUF tutorial [ Soon ].
 
 Common Errors: Consult the errors section for troubleshooting.
 

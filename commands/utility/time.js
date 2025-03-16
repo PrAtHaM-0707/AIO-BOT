@@ -9,8 +9,8 @@
 /_______  /\___|_  /|___|  \___/\____|__  / 
         \/       \/                     \/  
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/gjKsAeBuUF                   
+https://discord.gg/gjKsAeBuUF : https://discord.gg/gjKsAeBuUF                         
 
 Command Verified : ✓  
 Website        : ssrr.tech  
@@ -80,7 +80,7 @@ module.exports = {
         .setAuthor({ 
             name: "Alert!", 
             iconURL: cmdIcons.dotIcon ,
-            url: "https://discord.gg/xQF9f9yUEM"
+            url: "https://discord.gg/gjKsAeBuUF"
         })
         .setDescription('- This command can only be used through slash command!\n- Please use `/time`')
         .setTimestamp();
@@ -102,8 +102,8 @@ module.exports = {
 /_______  /\___|_  /|___|  \___/\____|__  / 
         \/       \/                     \/  
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/gjKsAeBuUF                   
+https://discord.gg/gjKsAeBuUF : https://discord.gg/gjKsAeBuUF                         
 
 Command Verified : ✓  
 Website        : ssrr.tech  

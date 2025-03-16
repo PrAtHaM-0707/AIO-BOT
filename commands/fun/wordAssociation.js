@@ -9,8 +9,8 @@
 /_______  /\___|_  /|___|  \___/\____|__  / 
         \/       \/                     \/  
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/gjKsAeBuUF                   
+https://discord.gg/gjKsAeBuUF : https://discord.gg/gjKsAeBuUF                         
 
 Command Verified : ✓  
 Website        : ssrr.tech  
@@ -293,7 +293,7 @@ module.exports = {
         .setAuthor({ 
             name: lang.alertTitle, 
             iconURL: cmdIcons.dotIcon,
-            url: "https://discord.gg/xQF9f9yUEM"
+            url: "https://discord.gg/gjKsAeBuUF"
         })
         .setDescription(lang.commandUsageMessage)
         .setTimestamp();
@@ -323,8 +323,8 @@ function isRelated(word1, word2) {
 /_______  /\___|_  /|___|  \___/\____|__  / 
         \/       \/                     \/  
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/gjKsAeBuUF                   
+https://discord.gg/gjKsAeBuUF : https://discord.gg/gjKsAeBuUF                         
 
 Command Verified : ✓  
 Website        : ssrr.tech  

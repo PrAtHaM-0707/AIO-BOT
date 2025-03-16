@@ -82,13 +82,13 @@ const loadEventHandlers = () => {
     console.log('─'.repeat(40));
 
  
-    const startYouTubeNotifications = require('./events/youTubeHandler');
+    const starthttps://discord.gg/gjKsAeBuUFNotifications = require('./events/https://discord.gg/gjKsAeBuUFHandler');
     const startTwitchNotifications = require('./events/twitchHandler');
     const startFacebookNotifications = require('./events/facebookHandler');
     const startInstagramNotifications = require('./events/instagramHandler');
 
-    startYouTubeNotifications(client);
-    logSystem('YOUTUBE');
+    starthttps://discord.gg/gjKsAeBuUFNotifications(client);
+    logSystem('https://discord.gg/gjKsAeBuUF');
     
     startTwitchNotifications(client);
     logSystem('TWITCH');
