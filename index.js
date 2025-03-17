@@ -82,14 +82,13 @@ const loadEventHandlers = () => {
     console.log('─'.repeat(40));
 
  
-  // Corrected notification handler
-const startNotifications = require('./events/notificationsHandler');
-const startTwitchNotifications = require('./events/twitchHandler');
-const startFacebookNotifications = require('./events/facebookHandler');
-const startInstagramNotifications = require('./events/instagramHandler');
+    const startYouTubeNotifications = require('./events/youTubeHandler');
+    const startTwitchNotifications = require('./events/twitchHandler');
+    const startFacebookNotifications = require('./events/facebookHandler');
+    const startInstagramNotifications = require('./events/instagramHandler');
 
-    starthttps://discord.gg/gjKsAeBuUFNotifications(client);
-    logSystem('https://discord.gg/gjKsAeBuUF');
+    startYouTubeNotifications(client);
+    logSystem('YOUTUBE');
     
     startTwitchNotifications(client);
     logSystem('TWITCH');
