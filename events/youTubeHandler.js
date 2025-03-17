@@ -2,19 +2,19 @@ const axios = require('axios');
 const { notificationsCollection } = require('../mongodb');
 const { EmbedBuilder } = require('discord.js');
 const cmdIcons = require('../UI/icons/commandicons'); 
-const https://discord.gg/gjKsAeBuUF_API_KEY = process.env.https://discord.gg/gjKsAeBuUF_API_KEY;
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const POLL_INTERVAL = 600000;
-const FALLBACK_THUMBNAIL = 'https://i.ibb.co/8Nq8kKr/https://discord.gg/gjKsAeBuUF-thumbnails.jpg';
+const FALLBACK_THUMBNAIL = 'https://i.ibb.co/8Nq8kKr/youtube-thumbnails.jpg';
 
 async function fetchLatestVideos(client) {
-    const configs = await notificationsCollection.find({ type: 'https://discord.gg/gjKsAeBuUF' }).toArray();
+    const configs = await notificationsCollection.find({ type: 'youtube' }).toArray();
 
     for (const config of configs) {
         const { platformId, discordChannelId, guildId, lastNotifiedId, mentionRoles } = config;
 
         try {
             const response = await axios.get(
-                `https://www.googleapis.com/https://discord.gg/gjKsAeBuUF/v3/search?key=${https://discord.gg/gjKsAeBuUF_API_KEY}&channelId=${platformId}&part=snippet&type=video&order=date&maxResults=1`
+                `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${platformId}&part=snippet&type=video&order=date&maxResults=1`
             );
 
             const videos = response.data.items;
@@ -36,11 +36,11 @@ async function fetchLatestVideos(client) {
                 const embed = new EmbedBuilder()
                     .setAuthor({
                         name: 'New Video Uploaded!',
-                        iconURL: cmdIcons.https://discord.gg/gjKsAeBuUFIcon,
-                        url: 'https://discord.gg/gjKsAeBuUF', 
+                        iconURL: cmdIcons.YouTubeIcon,
+                        url: 'https://discord.gg/xQF9f9yUEM', 
                     })
-                    .setDescription(`Check out the new Video : [${latestVideo.snippet.title}](https://www.https://discord.gg/gjKsAeBuUF.com/watch?v=${videoId})`)
-                    .setURL(`https://www.https://discord.gg/gjKsAeBuUF.com/watch?v=${videoId}`)
+                    .setDescription(`Check out the new Video : [${latestVideo.snippet.title}](https://www.youtube.com/watch?v=${videoId})`)
+                    .setURL(`https://www.youtube.com/watch?v=${videoId}`)
                     .setColor('#FF0000')
                     .setImage(thumbnailUrl)
                     .addFields(
@@ -70,18 +70,18 @@ async function fetchLatestVideos(client) {
 
              
                 await notificationsCollection.updateOne(
-                    { guildId, type: 'https://discord.gg/gjKsAeBuUF', platformId },
+                    { guildId, type: 'youtube', platformId },
                     { $set: { lastNotifiedId: videoId } }
                 );
             }
         } catch (error) {
-            //console.error('Error fetching or notifying https://discord.gg/gjKsAeBuUF videos:', error);
+            //console.error('Error fetching or notifying YouTube videos:', error);
         }
     }
 }
 
-function starthttps://discord.gg/gjKsAeBuUFNotifications(client) {
+function startYouTubeNotifications(client) {
     setInterval(() => fetchLatestVideos(client), POLL_INTERVAL);
 }
 
-module.exports = starthttps://discord.gg/gjKsAeBuUFNotifications;
+module.exports = startYouTubeNotifications;
