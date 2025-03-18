@@ -3,13 +3,7 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 const axios = require('axios');
-const { DisTube } = require('distube');
-const { YtDlpPlugin } = require('@distube/yt-dlp');
-const { SpotifyPlugin } = require('@distube/spotify');
-const { SoundCloudPlugin } = require('@distube/soundcloud');
-const { Dynamic } = require('musicard');
 const config = require('./config.json');
-const musicIcons = require('./UI/icons/musicicons');
 const colors = require('./UI/colors/colors');
 const loadLogHandlers = require('./logHandlers');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
@@ -24,13 +18,11 @@ client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(commandsPath);
 
-
 const enabledCommandFolders = commandFolders.filter(folder => config.categories[folder]);
 const commands = [];
 
 for (const folder of enabledCommandFolders) {
     const commandFiles = fs.readdirSync(path.join(commandsPath, folder)).filter(file => file.endsWith('.js'));
-
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, folder, file);
         const command = require(filePath);
@@ -38,7 +30,6 @@ for (const folder of enabledCommandFolders) {
         commands.push(command.data.toJSON());
     }
 }
-
 
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
@@ -53,8 +44,6 @@ for (const file of eventFiles) {
     }
 }
 
-
-
 async function fetchExpectedCommandsCount() {
     try {
         const response = await axios.get('https://server-backend-tdpa.onrender.com/api/expected-commands-count');
@@ -65,7 +54,6 @@ async function fetchExpectedCommandsCount() {
 }
 
 async function verifyCommandsCount() {
-
     console.log('\n' + '─'.repeat(60));
     console.log(`${colors.yellow}${colors.bright}             🔍 VERIFICATION 🔍${colors.reset}`);
     console.log('─'.repeat(60));
@@ -73,13 +61,11 @@ async function verifyCommandsCount() {
     const expectedCommandsCount = await fetchExpectedCommandsCount();
     const registeredCommandsCount = client.commands.size;
 
-
     if (expectedCommandsCount === -1) {
         console.log(`${colors.yellow}[ WARNING ]${colors.reset} ${colors.red}Server Status: OFFLINE ❌${colors.reset}`);
         console.log(`${colors.yellow}[ WARNING ]${colors.reset} ${colors.red}Unable to verify commands${colors.reset}`);
         return;
     }
-
 
     if (registeredCommandsCount !== expectedCommandsCount) {
         console.log(`${colors.yellow}[ WARNING ]${colors.reset} ${colors.red}Commands Mismatch Detected ⚠️${colors.reset}`);
@@ -91,10 +77,9 @@ async function verifyCommandsCount() {
         console.log(`${colors.cyan}[ SECURITY ]${colors.reset} ${colors.green}Command Integrity Verified ✅${colors.reset}`);
         console.log(`${colors.cyan}[ STATUS   ]${colors.reset} ${colors.green}Bot is Secured and Ready 🛡️${colors.reset}`);
     }
-
-    // Footer
     console.log('─'.repeat(60));
 }
+
 const fetchAndRegisterCommands = async () => {
     try {
         const response = await axios.get('https://server-backend-tdpa.onrender.com/api/commands');
@@ -123,26 +108,20 @@ const fetchAndRegisterCommands = async () => {
 
                         await interaction.reply({ embeds: [embed] });
                     } catch (error) {
-                        //console.error(`Error executing command ${command.name}:`, error);
                         //await interaction.reply('Failed to execute the command.');
                     }
                 }
             });
         });
-        //console.log('Commands fetched and registered successfully.');
     } catch (error) {
         //console.error('Error fetching commands:', error);
     }
 };
 
-
-
 const antiSpam = require('./antimodules/antiSpam');
 const antiLink = require('./antimodules/antiLink');
 const antiNuke = require('./antimodules/antiNuke');
 const antiRaid = require('./antimodules/antiRaid');
-
-
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN || config.token);
 
@@ -176,22 +155,18 @@ client.once('ready', async () => {
 
         if (registeredCommands.length !== commands.length) {
             console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Loading Slash Commands 🛠️${colors.reset}`);
-
             await rest.put(
                 Routes.applicationCommands(client.user.id),
                 { body: commands }
             );
-
             console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Successfully Loaded Slash Commands ✅${colors.reset}`);
         } else {
             console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Slash Commands Up To Date ✅${colors.reset}`);
         }
-
     } catch (error) {
         console.log(`${colors.red}[ ERROR ]${colors.reset} ${colors.red}${error}${colors.reset}`);
     }
 });
-
 
 const { connectToDatabase } = require('./mongodb');
 
@@ -199,120 +174,10 @@ connectToDatabase().then(() => {
     console.log('\x1b[36m[ DATABASE ]\x1b[0m', '\x1b[32mMongoDB Online ✅\x1b[0m');
 }).catch(console.error);
 
-client.distube = new DisTube(client, {
-    plugins: [
-        new SpotifyPlugin(),
-        new SoundCloudPlugin(),
-        new YtDlpPlugin(),
-    ],
-});
-console.log('\x1b[35m[ MUSIC 1 ]\x1b[0m', '\x1b[32mDisTube Music System Active ✅\x1b[0m');
-
-client.distube
-    .on('playSong', async (queue, song) => {
-        if (queue.textChannel) {
-            try {
-
-                const musicCard = await generateMusicCard(song);
-
-
-                const embed = {
-                    color: 0xDC92FF,
-                    author: {
-                        name: 'Now playing',
-                        url: 'https://discord.gg/gjKsAeBuUF',
-                        icon_url: musicIcons.playerIcon
-                    },
-                    description: `- Song name: **${song.name}** \n- Duration: **${song.formattedDuration}**\n- Requested by: ${song.user}`,
-                    image: {
-                        url: 'attachment://musicCard.png'
-                    },
-                    footer: {
-                        text: 'Distube Player',
-                        icon_url: musicIcons.footerIcon
-                    },
-                    timestamp: new Date().toISOString()
-                };
-
-                queue.textChannel.send({ embeds: [embed], files: [{ attachment: musicCard, name: 'musicCard.png' }] });
-            } catch (error) {
-                console.error('Error sending music card:', error);
-            }
-        }
-    })
-    .on('addSong', async (queue, song) => {
-        if (queue.textChannel) {
-            try {
-
-
-                const embed = {
-                    color: 0xDC92FF,
-                    description: `**${song.name}** \n- Duration: **${song.formattedDuration}**\n- Added by: ${song.user}`,
-                    footer: {
-                        text: 'Distube Player',
-                        icon_url: musicIcons.footerIcon
-                    },
-                    author: {
-                        name: 'Song added sucessfully',
-                        url: 'https://discord.gg/gjKsAeBuUF',
-                        icon_url: musicIcons.correctIcon
-                    },
-                    timestamp: new Date().toISOString()
-                };
-
-
-                queue.textChannel.send({ embeds: [embed] });
-            } catch (error) {
-                console.error('Error sending music card:', error);
-            }
-        }
-    })
-    .on('error', (channel, error) => {
-        console.error('Distube error:', error);
-        if (channel && typeof channel.send === 'function') {
-            channel.send(`An error occurred: ${error.message}`);
-        } else {
-            console.error(`Error channel is not a valid TextChannel: ${error.message}`);
-        }
-    });
-
-
-
-const data = require('./UI/banners/musicard');
-
-async function generateMusicCard(song) {
-    try {
-
-        const randomIndex = Math.floor(Math.random() * data.backgroundImages.length);
-        const backgroundImage = data.backgroundImages[randomIndex];
-
-        const musicCard = await Dynamic({
-            thumbnailImage: song.thumbnail,
-            name: song.name,
-            author: song.formattedDuration,
-            authorColor: "#FF7A00",
-            progress: 50,
-            imageDarkness: 60,
-            backgroundImage: backgroundImage,
-            nameColor: "#FFFFFF",
-            progressColor: "#FF7A00",
-            progressBarColor: "#5F2D00",
-        });
-
-        return musicCard;
-    } catch (error) {
-        console.error('Error generating music card:', error);
-        throw error;
-    }
-}
-
-
 const { getActiveApplication, getApplication } = require('./models/applications');
 
 client.on('interactionCreate', async (interaction) => {
-
     const guildId = interaction.guild.id;
-
 
     if (interaction.isButton() && interaction.customId.startsWith('open_application_modal_')) {
         const appName = interaction.customId.replace('open_application_modal_', '');
@@ -335,7 +200,6 @@ client.on('interactionCreate', async (interaction) => {
 
         await interaction.showModal(modal);
     }
-
 
     else if (interaction.isModalSubmit() && interaction.customId.startsWith('application_form_')) {
         const appName = interaction.customId.replace('application_form_', '');
@@ -371,7 +235,6 @@ client.on('interactionCreate', async (interaction) => {
         interaction.reply({ content: '✅ Your application has been submitted!', ephemeral: true });
     }
 
-
     else if (interaction.isButton() && (interaction.customId.startsWith('accept_application_') || interaction.customId.startsWith('deny_application_'))) {
         await interaction.deferReply({ ephemeral: true });
 
@@ -384,7 +247,6 @@ client.on('interactionCreate', async (interaction) => {
 
         const status = interaction.customId.startsWith('accept_application_') ? 'accepted' : 'denied';
         const color = status === 'accepted' ? 'Green' : 'Red';
-
 
         const updatedButtons = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
@@ -399,10 +261,8 @@ client.on('interactionCreate', async (interaction) => {
                 .setDisabled(true)
         );
 
-
         const updatedEmbed = EmbedBuilder.from(embed).setColor(color);
         await interaction.message.edit({ embeds: [updatedEmbed], components: [updatedButtons] });
-
 
         try {
             const user = await interaction.client.users.fetch(userId);
@@ -427,7 +287,6 @@ const cron = require('node-cron');
 const { getEconomyProfile, updateBills, handleEviction, updateWallet } = require('./models/economy');
 const { economyCollection } = require('./mongodb');
 
-
 async function checkAndProcessBills() {
     const allProfiles = await economyCollection.find({}).toArray();
 
@@ -439,10 +298,8 @@ async function checkAndProcessBills() {
         const overdueRent = profile.bills.unpaidRent > 0 && now > profile.bills.rentDueDate;
         const overdueUtilities = profile.bills.unpaidUtilities > 0 && now > profile.bills.utilitiesDueDate;
 
-
         const totalOverdue = overdueRent ? profile.bills.unpaidRent : 0;
         if (overdueRent || overdueUtilities) {
-
             const embed = new EmbedBuilder()
                 .setTitle('Overdue Bills Warning')
                 .setDescription(`You have overdue bills. Total Due: $${totalOverdue}. Please pay to avoid eviction.`)
@@ -450,7 +307,6 @@ async function checkAndProcessBills() {
             user.send({ embeds: [embed] });
 
             if (now - profile.bills.rentDueDate > 7 * 24 * 60 * 60 * 1000) {
-
                 if (profile.wallet >= totalOverdue) {
                     await updateWallet(userId, -totalOverdue);
                     await updateBills(userId, { unpaidRent: 0, rentDueDate: now + 30 * 24 * 60 * 60 * 1000 });
@@ -473,13 +329,10 @@ async function checkAndProcessBills() {
     }
 }
 
-
 cron.schedule('4 0 * * *', () => {
     console.log('Running daily bill check...');
     checkAndProcessBills();
 });
-
-
 
 const express = require("express");
 const app = express();
