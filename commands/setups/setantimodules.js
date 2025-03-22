@@ -39,7 +39,9 @@ module.exports = {
                 .addBooleanOption(option => option.setName('antiraid').setDescription('Enable or disable anti-raid module').setRequired(true))
                 .addStringOption(option => option.setName('logchannelid').setDescription('The ID of the log channel').setRequired(true))
                 .addStringOption(option => option.setName('ownerid1').setDescription('The first owner ID').setRequired(true))
-                .addStringOption(option => option.setName('adminid1').setDescription('The first admin ID').setRequired(true)))
+                .addStringOption(option => option.setName('ownerid2').setDescription('The second owner ID').setRequired(true))
+                .addStringOption(option => option.setName('adminid1').setDescription('The first admin ID').setRequired(true))
+                .addStringOption(option => option.setName('adminid2').setDescription('The second admin ID').setRequired(true)))
         .addSubcommand(subcommand =>
             subcommand
                 .setName('spam')
@@ -102,10 +104,12 @@ module.exports = {
             const antiRaid = interaction.options.getBoolean('antiraid');
             const logChannelId = interaction.options.getString('logchannelid');
             const ownerIds = [
-                interaction.options.getString('ownerid1')
+                interaction.options.getString('ownerid1'),
+                interaction.options.getString('ownerid2')
             ];
             const adminIds = [
-                interaction.options.getString('adminid1')
+                interaction.options.getString('adminid1'),
+                interaction.options.getString('adminid2')
             ];
 
             if (ownerIds.includes(memberId) || adminIds.includes(memberId)) {
