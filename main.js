@@ -145,24 +145,24 @@ client.once('ready', async () => {
     try {
         await verifyCommandsCount();
         await fetchAndRegisterCommands();
-        const registeredCommands = await rest.get(
-            Routes.applicationCommands(client.user.id)
-        );
 
         console.log('\n' + '─'.repeat(40));
         console.log(`${colors.yellow}${colors.bright}⚡ SLASH COMMANDS${colors.reset}`);
         console.log('─'.repeat(40));
 
-        if (registeredCommands.length !== commands.length) {
-            console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Loading Slash Commands 🛠️${colors.reset}`);
-            await rest.put(
-                Routes.applicationCommands(client.user.id),
-                { body: commands }
-            );
-            console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Successfully Loaded Slash Commands ✅${colors.reset}`);
-        } else {
-            console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Slash Commands Up To Date ✅${colors.reset}`);
-        }
+        console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Clearing Existing Slash Commands 🗑️${colors.reset}`);
+        await rest.put(
+            Routes.applicationCommands(client.user.id),
+            { body: [] } // Clear all commands
+        );
+
+        console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Loading Slash Commands 🛠️${colors.reset}`);
+        await rest.put(
+            Routes.applicationCommands(client.user.id),
+            { body: commands }
+        );
+
+        console.log(`${colors.red}[ LOADER ]${colors.reset} ${colors.green}Successfully Loaded Slash Commands ✅${colors.reset}`);
     } catch (error) {
         console.log(`${colors.red}[ ERROR ]${colors.reset} ${colors.red}${error}${colors.reset}`);
     }
