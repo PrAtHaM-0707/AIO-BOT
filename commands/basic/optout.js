@@ -1,37 +1,58 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { userPreferencesCollection } = require('../../mongodb');
+const cmdIcons = require('../../UI/icons/commandicons');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('optout')
-        .setDescription('Stop a user from having their messages tracked.')
-        .addUserOption(option =>
-            option
-                .setName('user')
-                .setDescription('The user to opt out of message tracking.')
-                .setRequired(true)
-        ),
+        .setDescription('Stop the bot from tracking your messages.'),
     async execute(interaction) {
-        // Check if the user is the bot owner (ID: 1095038359480574102)
-        if (interaction.user.id !== '1095038359480574102') {
-            return await interaction.reply({
-                content: '❌ You do not have permission to use this command. This is an owner-only command.',
-                ephemeral: true
-            });
+        if (!interaction.isCommand()) {
+            const embed = new EmbedBuilder()
+                .setColor('#3498db')
+                .setAuthor({
+                    name: "Alert!",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription('- This command can only be used through slash command!\n- Please use `/optout`')
+                .setTimestamp();
+            return await interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
-        // Get the user to opt out
-        const targetUser = interaction.options.getUser('user');
-        const userId = targetUser.id;
+        await interaction.deferReply({ ephemeral: true });
 
-        // Save the user's opt-out preference in the database
-        await userPreferencesCollection.updateOne(
-            { userId: userId },
-            { $set: { optedOut: true } },
-            { upsert: true }
-        );
+        const userId = interaction.user.id;
 
-        // Reply to the owner
-        await interaction.reply(`✅ ${targetUser.tag} has been opted out of message tracking.`);
+        try {
+            await userPreferencesCollection.updateOne(
+                { userId: userId },
+                { $set: { optedOut: true } },
+                { upsert: true }
+            );
+
+            const embed = new EmbedBuilder()
+                .setColor('#3498db')
+                .setAuthor({
+                    name: "Tracking Preference Updated",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription(`✅ You have opted out of message tracking. The bot will no longer track your messages.`)
+                .setTimestamp();
+            await interaction.editReply({ embeds: [embed] });
+        } catch (error) {
+            console.error(`Error in /optout for user ${userId}:`, error);
+            const embed = new EmbedBuilder()
+                .setColor('#FF0000')
+                .setAuthor({
+                    name: "Error",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription('❌ An error occurred while updating your tracking preference. Please try again later.')
+                .setTimestamp();
+            await interaction.editReply({ embeds: [embed] });
+        }
     },
 };
