@@ -1,37 +1,58 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { userPreferencesCollection } = require('../../mongodb');
+const cmdIcons = require('../../UI/icons/commandicons');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('optin')
-        .setDescription('Allow a user to have their messages tracked again.')
-        .addUserOption(option =>
-            option
-                .setName('user')
-                .setDescription('The user to opt in to message tracking.')
-                .setRequired(true)
-        ),
+        .setDescription('Allow the bot to track your messages again.'),
     async execute(interaction) {
-        // Check if the user is the bot owner (ID: 1095038359480574102)
-        if (interaction.user.id !== '1095038359480574102') {
-            return await interaction.reply({
-                content: '❌ You do not have permission to use this command. This is an owner-only command.',
-                ephemeral: true
-            });
+        if (!interaction.isCommand()) {
+            const embed = new EmbedBuilder()
+                .setColor('#3498db')
+                .setAuthor({
+                    name: "Alert!",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription('- This command can only be used through slash command!\n- Please use `/optin`')
+                .setTimestamp();
+            return await interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
-        // Get the user to opt in
-        const targetUser = interaction.options.getUser('user');
-        const userId = targetUser.id;
+        await interaction.deferReply({ ephemeral: true });
 
-        // Save the user's opt-in preference in the database
-        await userPreferencesCollection.updateOne(
-            { userId: userId },
-            { $set: { optedOut: false } },
-            { upsert: true }
-        );
+        const userId = interaction.user.id;
 
-        // Reply to the owner
-        await interaction.reply(`✅ ${targetUser.tag} has been opted in to message tracking.`);
+        try {
+            await userPreferencesCollection.updateOne(
+                { userId: userId },
+                { $set: { optedOut: false } },
+                { upsert: true }
+            );
+
+            const embed = new EmbedBuilder()
+                .setColor('#3498db')
+                .setAuthor({
+                    name: "Tracking Preference Updated",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription(`✅ You have opted in to message tracking. The bot will now track your messages.`)
+                .setTimestamp();
+            await interaction.editReply({ embeds: [embed] });
+        } catch (error) {
+            console.error(`Error in /optin for user ${userId}:`, error);
+            const embed = new EmbedBuilder()
+                .setColor('#FF0000')
+                .setAuthor({
+                    name: "Error",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription('❌ An error occurred while updating your tracking preference. Please try again later.')
+                .setTimestamp();
+            await interaction.editReply({ embeds: [embed] });
+        }
     },
 };
