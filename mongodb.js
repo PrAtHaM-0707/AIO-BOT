@@ -56,6 +56,7 @@ const playlistCollection = db.collection('lavalinkplaylist');
 const autoplayCollection = db.collection('autoplaylavalink');
 const embedCollection = db.collection('aioembeds');
 const countingCollection = db.collection('countingame');
+const userPreferencesCollection = db.collection('userPreferences');
 
 async function saveGiveaway(giveaway) {
     await giveawayCollection.updateOne(
@@ -110,4 +111,5 @@ module.exports = {
     autoplayCollection,
     embedCollection,
     countingCollection,
+    userPreferencesCollection,
 };
