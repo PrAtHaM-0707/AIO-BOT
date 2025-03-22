@@ -1,38 +1,55 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { userPreferencesCollection } = require('../../mongodb');
+const cmdIcons = require('../../UI/icons/commandicons');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('trackingstatus')
-        .setDescription('Check if a user has opted out of message tracking.')
-        .addUserOption(option =>
-            option
-                .setName('user')
-                .setDescription('The user to check the tracking status for. Defaults to you.')
-                .setRequired(false)
-        ),
+        .setDescription('Check if your messages are being tracked by the bot.'),
     async execute(interaction) {
-        // Check if the user is the bot owner (ID: 1095038359480574102)
-        if (interaction.user.id !== '1095038359480574102') {
-            return await interaction.reply({
-                content: '❌ You do not have permission to use this command. This is an owner-only command.',
-                ephemeral: true
-            });
+        if (!interaction.isCommand()) {
+            const embed = new EmbedBuilder()
+                .setColor('#3498db')
+                .setAuthor({
+                    name: "Alert!",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription('- This command can only be used through slash command!\n- Please use `/trackingstatus`')
+                .setTimestamp();
+            return await interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
-        // Get the user to check (default to the command issuer if no user is specified)
-        const targetUser = interaction.options.getUser('user') || interaction.user;
-        const userId = targetUser.id;
+        await interaction.deferReply({ ephemeral: true });
 
-        // Check the user's opt-out status
-        const userPreference = await userPreferencesCollection.findOne({ userId: userId });
-        const isOptedOut = userPreference?.optedOut || false;
+        const userId = interaction.user.id;
 
-        // Reply to the owner
-        if (isOptedOut) {
-            await interaction.reply(`${targetUser.tag} is currently **opted out** of message tracking.`);
-        } else {
-            await interaction.reply(`${targetUser.tag} is currently **opted in** to message tracking.`);
+        try {
+            const userPreference = await userPreferencesCollection.findOne({ userId: userId });
+            const isOptedOut = userPreference?.optedOut || false;
+
+            const embed = new EmbedBuilder()
+                .setColor('#3498db')
+                .setAuthor({
+                    name: "Tracking Status",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription(`You are currently **${isOptedOut ? 'opted out' : 'opted in'}** of message tracking.`)
+                .setTimestamp();
+            await interaction.editReply({ embeds: [embed] });
+        } catch (error) {
+            console.error(`Error in /trackingstatus for user ${userId}:`, error);
+            const embed = new EmbedBuilder()
+                .setColor('#FF0000')
+                .setAuthor({
+                    name: "Error",
+                    iconURL: cmdIcons.dotIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription('❌ An error occurred while checking your tracking status. Please try again later.')
+                .setTimestamp();
+            await interaction.editReply({ embeds: [embed] });
         }
     },
 };
