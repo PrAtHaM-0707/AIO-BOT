@@ -1,29 +1,37 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { userPreferencesCollection } = require('../../mongodb'); // Adjust the path to point to mongodb.js
+const { userPreferencesCollection } = require('../../mongodb');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('optin')
-        .setDescription('Allow the bot to track your messages again.'),
+        .setDescription('Allow a user to have their messages tracked again.')
+        .addUserOption(option =>
+            option
+                .setName('user')
+                .setDescription('The user to opt in to message tracking.')
+                .setRequired(true)
+        ),
     async execute(interaction) {
         // Check if the user is the bot owner (ID: 1095038359480574102)
         if (interaction.user.id !== '1095038359480574102') {
             return await interaction.reply({
                 content: '❌ You do not have permission to use this command. This is an owner-only command.',
-                ephemeral: true // Makes the reply visible only to the user
+                ephemeral: true
             });
         }
 
-        const userId = interaction.user.id;
+        // Get the user to opt in
+        const targetUser = interaction.options.getUser('user');
+        const userId = targetUser.id;
 
         // Save the user's opt-in preference in the database
         await userPreferencesCollection.updateOne(
             { userId: userId },
             { $set: { optedOut: false } },
-            { upsert: true } // Create a new entry if the user doesn't exist
+            { upsert: true }
         );
 
-        // Reply to the user
-        await interaction.reply('You have opted back in. The bot will now track your messages.');
+        // Reply to the owner
+        await interaction.reply(`✅ ${targetUser.tag} has been opted in to message tracking.`);
     },
 };
